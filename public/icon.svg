@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="224" fill="#1C1C1E"/>
+  <!-- Flag pole -->
+  <rect x="340" y="220" width="18" height="520" rx="9" fill="#C9A84C"/>
+  <!-- Flag -->
+  <path d="M358 220 L580 300 L358 380 Z" fill="#C9A84C"/>
+  <!-- Golf ball -->
+  <circle cx="580" cy="740" r="100" fill="white"/>
+  <circle cx="555" cy="715" r="10" fill="#ccc"/>
+  <circle cx="590" cy="700" r="10" fill="#ccc"/>
+  <circle cx="620" cy="720" r="10" fill="#ccc"/>
+  <circle cx="565" cy="748" r="10" fill="#ccc"/>
+  <circle cx="600" cy="755" r="10" fill="#ccc"/>
+  <circle cx="570" cy="775" r="10" fill="#ccc"/>
+  <circle cx="608" cy="730" r="10" fill="#ccc"/>
+</svg>
