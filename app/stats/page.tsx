@@ -12,7 +12,7 @@ export default function StatsPage() {
   useEffect(() => { setRounds(getRounds().filter(r => r.finished)); }, []);
 
   if (!rounds.length) return (
-    <div className="flex flex-col h-screen bg-surface overflow-hidden">
+    <div className="flex flex-col h-full bg-surface overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center gap-5 p-8 text-center">
         <div className="w-24 h-24 rounded-full bg-surface-low flex items-center justify-center">
           <Icon name="bar_chart" className="text-5xl text-on-variant" />
@@ -55,7 +55,7 @@ export default function StatsPage() {
   ] as const;
 
   return (
-    <div className="flex flex-col h-screen bg-surface overflow-hidden">
+    <div className="flex flex-col h-full bg-surface overflow-hidden">
       <div className="glass sticky top-0 z-30 px-4 safe-top pb-4 flex-shrink-0">
         <h1 className="font-display text-2xl font-bold text-on-surface">Statistics</h1>
         <p className="text-xs text-on-variant mt-0.5">{rounds.length} round{rounds.length !== 1 ? 's' : ''} tracked</p>

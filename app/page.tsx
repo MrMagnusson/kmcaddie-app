@@ -156,7 +156,7 @@ export default function HomePage() {
   const isSearchMode = searchResults.length > 0;
 
   return (
-    <div className="flex flex-col h-screen bg-surface overflow-hidden">
+    <div className="flex flex-col h-full bg-surface overflow-hidden">
       {/* Sticky header */}
       <div className="glass sticky top-0 z-30 px-4 safe-top pb-4 flex-shrink-0">
         <div className="flex items-center justify-between mb-3">

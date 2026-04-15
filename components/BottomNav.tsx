@@ -5,17 +5,17 @@ import { usePathname } from 'next/navigation';
 import { Icon } from './Icon';
 
 const NAV = [
-  { href: '/',        icon: 'home',      label: 'Home'  },
-  { href: '/round',   icon: 'sports_golf', label: 'Round', fab: true },
-  { href: '/stats',   icon: 'bar_chart', label: 'Stats' },
+  { href: '/',      icon: 'home',        label: 'Home'  },
+  { href: '/round', icon: 'sports_golf', label: 'Round', fab: true },
+  { href: '/stats', icon: 'bar_chart',   label: 'Stats' },
 ];
 
 export function BottomNav() {
   const path = usePathname();
 
   return (
-    <nav className="glass border-t border-outline-v/20 safe-bottom fixed bottom-0 left-0 right-0 z-40">
-      <div className="flex items-center justify-around h-16 px-4 max-w-lg mx-auto">
+    <nav className="glass border-t border-outline-v/20 safe-bottom absolute bottom-0 left-0 right-0 z-40">
+      <div className="flex items-center justify-around h-16 px-4">
         {NAV.map(({ href, icon, label, fab }) =>
           fab ? (
             <Link key={href} href={href}
@@ -26,7 +26,8 @@ export function BottomNav() {
           ) : (
             <Link key={href} href={href}
               className="flex flex-col items-center gap-0.5 px-5 py-1 min-w-[56px] min-h-[44px] justify-center">
-              <Icon name={icon} filled={path === href} className={`text-2xl ${path === href ? 'text-primary' : 'text-on-variant'}`} />
+              <Icon name={icon} filled={path === href}
+                className={`text-2xl ${path === href ? 'text-primary' : 'text-on-variant'}`} />
               <span className={`text-[10px] tracking-wide font-semibold ${path === href ? 'text-primary' : 'text-on-variant'}`}>
                 {label}
               </span>

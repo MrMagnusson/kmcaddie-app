@@ -16,7 +16,7 @@ export default function SettingsPage() {
   const save = () => { saveSettings(s); router.push('/'); };
 
   return (
-    <div className="flex flex-col h-screen bg-surface overflow-hidden">
+    <div className="flex flex-col h-full bg-surface overflow-hidden">
       <div className="glass px-4 safe-top pb-4 flex items-center justify-between flex-shrink-0">
         <button onClick={() => router.back()} className="w-11 h-11 rounded-full bg-surface-high flex items-center justify-center">
           <Icon name="arrow_back" className="text-on-surface" />

@@ -108,7 +108,7 @@ export default function RoundPage() {
   };
 
   if (!round) return (
-    <div className="flex flex-col h-screen bg-surface overflow-hidden">
+    <div className="flex flex-col h-full bg-surface overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center gap-5 p-8 text-center">
         <div className="w-24 h-24 rounded-full bg-surface-low flex items-center justify-center">
           <Icon name="sports_golf" className="text-5xl text-on-variant" />
@@ -130,7 +130,7 @@ export default function RoundPage() {
   const shotDist = gpsPos && shotStart ? Math.round(havKm(shotStart.lat, shotStart.lon, gpsPos.lat, gpsPos.lon) * 1000) : null;
 
   return (
-    <div className="flex flex-col h-screen bg-surface overflow-hidden">
+    <div className="flex flex-col h-full bg-surface overflow-hidden">
       {/* Sticky header */}
       <div className="glass px-4 safe-top pb-3 flex-shrink-0 z-20 relative">
         <div className="flex items-center justify-between mb-2">
