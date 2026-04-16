@@ -24,17 +24,20 @@ interface CourseWithWeather extends Course {
   playability?: string;
 }
 
-function startRound(course: Course, router: ReturnType<typeof useRouter>) {
+async function startRound(course: Course, router: ReturnType<typeof useRouter>, gcaKey?: string) {
+  // Default holes — will be enriched below if API data is available
+  const defaultHoles = Array.from({ length: 18 }, (_, i) => ({
+    hole: i + 1, par: 4, score: null as null, putts: 0, fairway: null as null, gir: false,
+  }));
+
   const round: Round = {
     id: Date.now(),
     courseId: course.id,
-    courseName: course.name || course.club_name || 'Unknown',
-    courseLocation: course.location || course.city || '',
+    courseName: course.name || (course as Course).club_name || 'Unknown',
+    courseLocation: course.location || (course as Course).city || '',
     courseLat: course.lat,
     courseLon: course.lon,
-    holes: Array.from({ length: 18 }, (_, i) => ({
-      hole: i + 1, par: 4, score: null, putts: 0, fairway: null, gir: false,
-    })),
+    holes: defaultHoles,
     currentHole: 1,
     totalScore: 0,
     totalPutts: 0,
@@ -42,6 +45,41 @@ function startRound(course: Course, router: ReturnType<typeof useRouter>) {
     startedAt: Date.now(),
     finished: false,
   };
+
+  // Try to enrich holes with real par / yardage data from GolfCourseAPI
+  if (course.id) {
+    try {
+      const keyParam = gcaKey ? `&key=${encodeURIComponent(gcaKey)}` : '';
+      const res = await fetch(`/api/course?id=${encodeURIComponent(course.id)}${keyParam}`);
+      if (res.ok) {
+        const data = await res.json();
+        // GCA returns course detail; holes may live at data.holes or data.course.holes
+        const gcaHoles: Array<{ hole_number: number; par: number; handicap?: number; tees?: Array<{ tee_color?: string; distance?: number; distance_meters?: number }> }> =
+          data.holes ?? data.course?.holes ?? [];
+        if (gcaHoles.length >= 18) {
+          round.holes = gcaHoles.slice(0, 18).map(h => {
+            // Pick the middle tee by preference: white > yellow > any
+            const teeOrder = ['white', 'yellow', 'blue', 'red'];
+            let tee = h.tees?.find(t => teeOrder.includes((t.tee_color ?? '').toLowerCase()));
+            if (!tee && h.tees?.length) tee = h.tees[0];
+            return {
+              hole: h.hole_number,
+              par: h.par ?? 4,
+              handicap: h.handicap,
+              yardage: tee?.distance_meters ?? (tee?.distance ? Math.round(tee.distance * 0.9144) : undefined),
+              score: null,
+              putts: 0,
+              fairway: null,
+              gir: false,
+            };
+          });
+        }
+      }
+    } catch {
+      // silently fall back to defaults if API call fails
+    }
+  }
+
   saveActiveRound(round);
   router.push('/round');
 }
@@ -265,7 +303,7 @@ export default function HomePage() {
                       )}
                     </div>
                   )}
-                  <button onClick={() => startRound(c, router)}
+                  <button onClick={() => startRound(c, router, settings?.gcaKey)}
                     className="btn-primary rounded-xl px-4 py-2.5 text-sm font-display font-semibold flex-shrink-0 min-h-[44px]">
                     Play
                   </button>

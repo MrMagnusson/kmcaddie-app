@@ -59,6 +59,8 @@ export interface WeatherData {
 export interface HoleData {
   hole: number;
   par: number;
+  handicap?: number;
+  yardage?: number;   // total hole length in metres from white/middle tee
   score: number | null;
   putts: number;
   fairway: 'hit' | 'left' | 'right' | null;

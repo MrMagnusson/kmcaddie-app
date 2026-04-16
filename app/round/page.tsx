@@ -214,6 +214,9 @@ export default function RoundPage() {
                 <span className="font-display text-5xl font-bold text-on-surface leading-none">{round.currentHole}</span>
                 <span className="font-display text-lg text-on-variant font-light">/ 18</span>
               </div>
+              {hole.yardage != null && (
+                <p className="text-xs text-on-variant/70 mt-0.5">{hole.yardage} m from tee</p>
+              )}
 
               {/* Distance to pin — shown when GPS is active and pin is set */}
               {distToPin != null && (
