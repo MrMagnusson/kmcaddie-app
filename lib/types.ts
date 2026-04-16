@@ -63,6 +63,8 @@ export interface HoleData {
   putts: number;
   fairway: 'hit' | 'left' | 'right' | null;
   gir: boolean;
+  pinLat?: number;
+  pinLon?: number;
 }
 
 export interface ShotRecord {

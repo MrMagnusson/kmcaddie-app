@@ -17,8 +17,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const url = `https://api.golfcourseapi.com/v1/search?search_query=${encodeURIComponent(q)}&key=${key}`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'KMCaddie/1.0' } });
+    const url = `https://api.golfcourseapi.com/v1/search?search_query=${encodeURIComponent(q)}`;
+    const res = await fetch(url, {
+      headers: { 'Authorization': `Key ${key}`, 'User-Agent': 'KMCaddie/1.0' },
+    });
     const data = await res.json();
 
     if (!res.ok) {

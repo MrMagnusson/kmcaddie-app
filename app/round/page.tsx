@@ -128,6 +128,28 @@ export default function RoundPage() {
   const toPar = round.holes.reduce((s, h) => h.score != null ? s + (h.score - h.par) : s, 0);
   const holesPlayed = round.holes.filter(h => h.score != null).length;
   const shotDist = gpsPos && shotStart ? Math.round(havKm(shotStart.lat, shotStart.lon, gpsPos.lat, gpsPos.lon) * 1000) : null;
+  const distToPin = gpsPos && hole.pinLat != null && hole.pinLon != null
+    ? Math.round(havKm(gpsPos.lat, gpsPos.lon, hole.pinLat, hole.pinLon) * 1000)
+    : null;
+
+  const setPin = () => {
+    if (!gpsPos) return;
+    setRound(r => {
+      if (!r) return r;
+      const holes = [...r.holes];
+      holes[r.currentHole - 1] = { ...holes[r.currentHole - 1], pinLat: gpsPos.lat, pinLon: gpsPos.lon };
+      return { ...r, holes };
+    });
+  };
+
+  const clearPin = () => {
+    setRound(r => {
+      if (!r) return r;
+      const holes = [...r.holes];
+      holes[r.currentHole - 1] = { ...holes[r.currentHole - 1], pinLat: undefined, pinLon: undefined };
+      return { ...r, holes };
+    });
+  };
 
   return (
     <div className="flex flex-col h-full bg-surface overflow-hidden">
@@ -192,14 +214,31 @@ export default function RoundPage() {
                 <span className="font-display text-5xl font-bold text-on-surface leading-none">{round.currentHole}</span>
                 <span className="font-display text-lg text-on-variant font-light">/ 18</span>
               </div>
+
+              {/* Distance to pin — shown when GPS is active and pin is set */}
+              {distToPin != null && (
+                <div className="mt-2 flex items-center gap-2">
+                  <div>
+                    <p className="font-display text-3xl font-bold text-primary leading-none">{distToPin} m</p>
+                    <p className="text-xs text-on-variant mt-0.5">to pin</p>
+                  </div>
+                  <button onClick={clearPin}
+                    className="ml-1 w-7 h-7 rounded-full bg-black/30 flex items-center justify-center">
+                    <Icon name="close" className="text-on-variant text-sm" />
+                  </button>
+                </div>
+              )}
+
+              {/* Shot distance — shown while tracking a shot */}
               {shotDist != null && (
                 <div className="mt-2">
                   <p className="font-display text-2xl font-bold text-primary">{shotDist} m</p>
                   <p className="text-xs text-on-variant">shot distance</p>
                 </div>
               )}
-              {tracking && gpsPos && !shotStart && (
-                <p className="text-xs text-primary mt-2">GPS ±{gpsPos.acc}m · tap Track Shot</p>
+
+              {tracking && gpsPos && !shotStart && distToPin == null && (
+                <p className="text-xs text-primary mt-2">GPS ±{gpsPos.acc}m</p>
               )}
               {tracking && !gpsPos && (
                 <p className="text-xs text-on-variant mt-2 pulse">Acquiring GPS…</p>
@@ -215,6 +254,14 @@ export default function RoundPage() {
                   </button>
                 ))}
               </div>
+              {/* Set Pin button — appears when GPS is on */}
+              {tracking && gpsPos && (
+                <button onClick={setPin}
+                  className={`mt-2 flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold ml-auto ${hole.pinLat != null ? 'bg-primary/20 text-primary' : 'bg-black/30 text-on-variant'}`}>
+                  <Icon name="flag" className="text-sm" />
+                  {hole.pinLat != null ? 'Move Pin' : 'Set Pin'}
+                </button>
+              )}
             </div>
           </div>
           <button onClick={() => { setTracking(t => { if (t) setShotStart(null); return !t; }); }}
